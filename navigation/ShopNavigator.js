@@ -6,7 +6,9 @@ import ProductOverviewScreen from "../screens/shop/ProductOverviewScreen";
 import ProductDetailScreen from "../screens/shop/ProductDetailScreen";
 import CartScreen from "../screens/shop/CartScreen";
 import OrderScreen from "../screens/shop/OrdersScreen";
+import UserProductsScreen from "../screens/user/UserProductsScreen";
 import Colors from "../constants/Colors";
+
 
 const ProductsNavigator=createStackNavigator({
     ProductsOverview:ProductOverviewScreen,
@@ -32,9 +34,22 @@ const OrdersNavigator=createStackNavigator({
     }
 });
 
+const AdminNavigator=createStackNavigator({
+    UserProducts:UserProductsScreen
+},{
+    defaultNavigationOptions:{
+        headerStyle:{
+            backgroundColor:Colors.primaryColor
+        },
+        headerTintColor:'white'
+    }
+});
+
+
 const ShopNavigator=createDrawerNavigator({
     Products:ProductsNavigator,
-    Orders:OrdersNavigator
+    Orders:OrdersNavigator,
+    Admin:AdminNavigator
 },{
     contentOptions:{
         activeTintColor:Colors.primaryColor
