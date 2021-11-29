@@ -1,15 +1,17 @@
-import React from "react";
-import { FlatList,Text,Button } from "react-native";
+import React,{useState,useEffect} from "react";
+import { FlatList,Text,Button,View,ActivityIndicator,StyleSheet } from "react-native";
 import { useSelector,useDispatch} from "react-redux";
 import ProductItem from "../../components/ProductItem";
 import { HeaderButtons,Item } from "react-navigation-header-buttons";
 import * as cartActions from '../../store/actions/cart';
+import * as productsActions from '../../store/actions/products';
 import CustomHeaderButton from "../../components/HeaderButton";
 import Colors from "../../constants/Colors";
 
 
 const ProductOverviewScreen=props=>{
-    
+
+    const [isLoading,setIsLoading]=useState(false);
     const productsData=useSelector(state=>state.products.availableProducts);
     const dispatch=useDispatch();
 
@@ -19,6 +21,30 @@ const ProductOverviewScreen=props=>{
             productTitle:title
         });
 
+    }
+
+    useEffect(()=>{
+        const loadProducts= async () =>{
+            setIsLoading(true);
+            await dispatch(productsActions.fetchProducts());
+            setIsLoading(false);
+        };
+       loadProducts();
+    },[dispatch]);
+
+    if(isLoading){
+        return <View style={styles.centered}>
+            <ActivityIndicator 
+            size='large'
+            color={Colors.primaryColor}
+            />
+        </View>
+    }
+
+    if(!isLoading && productsData.length===0){
+        return <View style={styles.centered}>
+            <Text>No Products Found</Text>
+        </View>
     }
 
  return(
@@ -69,5 +95,13 @@ ProductOverviewScreen.navigationOptions=navData=>{
     )
 }
 }
+
+const styles=StyleSheet.create({
+    centered:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    }
+})
 
 export default ProductOverviewScreen;
